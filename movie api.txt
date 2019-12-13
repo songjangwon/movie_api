@@ -1,0 +1,81 @@
+django-admin startproject assetManage_api
+
+
+django-admin startproject movie_api
+cd movie_api
+python manage.py startapp movies
+
+
+
+# settings.py 
+ALLOWED_HOSTS = ['*'] 
+INSTALLED_APPS = [ ... 'rest_framework', 'movies.apps.MoviesConfig', ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.IsAdminUser',
+    ],
+    'PAGE_SIZE': 10
+}
+
+
+
+# movie_api/movies/models.py
+
+class Movie(models.Model):
+    title = models.CharField(max_length=30) # 제목
+    genre = models.CharField(max_length=15) # 장르
+    year = models.IntegerField() # 제작 년도
+
+    def __str__(self):
+        return self.title
+
+
+
+python manage.py makemigrations 
+python manage.py migrate
+
+
+
+
+# movie_api/movies/serializers.py
+
+from rest_framework import serializers
+from .models import Movie
+class MovieSerializer(serializers.ModelSerializer):
+    class Meta:
+    model = Movie # 모델 설정
+    fields = ('id','title','genre','year') # 필드 설정
+
+
+
+
+# movie_api/movies/views.py 
+from rest_framework import viewsets 
+from .serializers import MovieSerializer 
+from .models import Movie 
+class MovieViewSet(viewsets.ModelViewSet): 
+	queryset = Movie.objects.all() 
+	serializer_class = MovieSerializer
+
+
+
+
+# movie_api/urls.py 
+from django.conf.urls import url,include 
+from django.contrib import admin 
+from rest_framework import routers 
+from movies.views import MovieViewSet 
+
+router = routers.DefaultRouter()
+router.register('movies',MovieViewSet)
+
+urlpatterns = [ url(r'^admin/', admin.site.urls), url(r'^',include(router.urls)), ]
+
+
+
+
+
+
+
