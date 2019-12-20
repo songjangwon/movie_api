@@ -7,3 +7,10 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+class Todo(models.Model):
+    text = models.CharField(max_length=30) # 제목
+    checked = models.BooleanField() # 장르
+
+    def __str__(self):
+        return self.title

@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import MovieSerializer
+from .serializers import TodoSerializer
 from .models import Movie
+from .models import Todo
 from rest_framework.response import Response
 from rest_framework.decorators import action
 import sys
@@ -20,4 +22,8 @@ class MovieViewSet(viewsets.ModelViewSet):
 		label = QLabel("Hello PyQt")
 		label.show()
 		app.exec_()
+
+class TodoViewSet(viewsets.ModelViewSet):
+	queryset = Todo.objects.all()
+	serializer_class = TodoSerializer
 
